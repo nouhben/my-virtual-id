@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "144482701982",
+    "project_id": "rate-my-pix",
+    "storage_bucket": "rate-my-pix.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144482701982:android:5c66a123c00ff988bf618f",
+        "android_client_info": {
+          "package_name": "com.nouhben.best_starter_architecture"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144482701982-dr4nrpjdolpfeavl2328buov0anjpdoj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwBh0HeAZ4j8_PU6-lFJlTRlxW4LeOnAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144482701982-dr4nrpjdolpfeavl2328buov0anjpdoj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
