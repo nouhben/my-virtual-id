@@ -3,10 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SignInScreen extends StatelessWidget {
+  Future<void> _signInAnonymously(BuildContext context) async {
+    try {
+      final auth = Provider.of<AuthService>(context, listen: false);
+      await auth.signInAnon();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign In'),
@@ -24,10 +31,7 @@ class SignInScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            onPressed: () async {
-              final usr = await _auth.signInAnon();
-              print('user: ${usr.uid}');
-            },
+            onPressed: () => _signInAnonymously(context),
           ),
         ),
       ),

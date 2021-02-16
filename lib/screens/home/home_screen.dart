@@ -1,15 +1,19 @@
-import 'package:best_starter_architecture/models/avatar_reference.dart';
 import 'package:best_starter_architecture/screens/about/about_screen.dart';
 import 'package:best_starter_architecture/services/auth_service.dart';
-import 'package:best_starter_architecture/services/firebase_storage_service.dart';
-import 'package:best_starter_architecture/services/firestore_service.dart';
-import 'package:best_starter_architecture/services/image_picker_service.dart';
 import 'package:best_starter_architecture/widgets/avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      final auth = Provider.of<AuthService>(context, listen: false);
+      await auth.signOut();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> _onAbout(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -20,29 +24,18 @@ class HomeScreen extends StatelessWidget {
   }
 
   Future<void> _chooseAvatar(BuildContext context) async {
-    // 1. Get image from picker
-    final _imagePicker =
-        Provider.of<ImagePickerService>(context, listen: false);
-    final file = await _imagePicker.pickImage(source: ImageSource.gallery);
-    // 2. Upload to storage
-    if (file != null) {
-      final storage =
-          Provider.of<FirebaseStorageService>(context, listen: false);
-      final downloadUrl = await storage.uploadAvatar(file: file);
+    try {
+      // 1. Get image from picker
+      // 2. Upload to storage
       // 3. Save url to Firestore
-      final database = Provider.of<FirestoreService>(context, listen: false);
-      await database.setAvatarReference(
-        AvatarReference(downloadUrl: downloadUrl),
-      );
       // 4. (optional) delete local file as no longer needed
-      await file.delete();
+    } catch (e) {
+      print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -59,17 +52,14 @@ class HomeScreen extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            onPressed: () async {
-              await _auth.signOut();
-            },
+            onPressed: () => _signOut(context),
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(280.0),
+          preferredSize: Size.fromHeight(130.0),
           child: Column(
             children: <Widget>[
               _buildUserInfo(context: context),
-              //CustomUserInfo(onPress: _chooseAvatar),
               SizedBox(height: 16),
             ],
           ),
@@ -79,21 +69,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildUserInfo({BuildContext context}) {
-    final database = Provider.of<FirestoreService>(context, listen: false);
-    return StreamBuilder<AvatarReference>(
-      stream: database.avatarReferenceStream(),
-      builder: (context, snapshot) {
-        final avatarReference = snapshot.data;
-        return Avatar(
-          photoUrl: avatarReference?.downloadUrl,
-          radius: 50,
-          borderColor: Colors.black54,
-          borderWidth: 2.0,
-          onPressed: () async {
-            await _chooseAvatar(context);
-          },
-        );
-      },
+    // TODO: Download and show avatar from Firebase storage
+    return Avatar(
+      photoUrl: null,
+      radius: 50,
+      borderColor: Colors.black54,
+      borderWidth: 2.0,
+      onPressed: () => _chooseAvatar(context),
     );
   }
 }

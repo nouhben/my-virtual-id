@@ -17,7 +17,7 @@ class AuthService {
   Stream<CustomUser> get onAuthStateChanges =>
       _auth.authStateChanges().map(_userFromFirebaseUser);
 
-  Future signOut() async => await _auth.signOut();
+  Future<void> signOut() async => await _auth.signOut();
 
   Future<CustomUser> signInAnon() async {
     try {
