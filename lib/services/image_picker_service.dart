@@ -8,7 +8,14 @@ class ImagePickerService {
 
   // Returns a [File] object pointing to the image that was picked.
   Future<File> pickImage({@required ImageSource source}) async {
-    final pickedImage = await _imagePicker.getImage(source: source);
-    return File(pickedImage.path);
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
+    File _image;
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      return _image;
+    } else {
+      print('No image selected.');
+      return null;
+    }
   }
 }

@@ -20,7 +20,17 @@ class AuthWidget extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final user = snapshot.data;
-          return user != null ? HomeScreen() : SignInScreen();
+          //return user != null ? HomeScreen() : SignInScreen();
+          // Like that we make the user accessible to the descandants
+          // and this is good because we do less firebase access even though
+          // I can get it : Firebase.instance.currentUser
+          if (user != null) {
+            return Provider<CustomUser>.value(
+              value: user,
+              child: HomeScreen(),
+            );
+          }
+          return SignInScreen();
         }
         return Scaffold(
           backgroundColor: kSecondaryColor,
