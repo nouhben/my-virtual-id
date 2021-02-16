@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
+
 class AvatarReference {
-  AvatarReference({this.downloadUrl});
+  AvatarReference({@required this.downloadUrl});
   final String downloadUrl;
 
   factory AvatarReference.fromMap(Map<String, dynamic> data) =>

@@ -20,10 +20,11 @@ class AuthService {
   Future signOut() async => await _auth.signOut();
 
   Future<CustomUser> signInAnon() async {
-    final UserCredential _credentials = await _auth.signInAnonymously();
     try {
+      final UserCredential _credentials = await _auth.signInAnonymously();
       return _userFromFirebaseUser(_credentials.user);
     } catch (e) {
+      print(e.toString());
       return null;
     }
   }
