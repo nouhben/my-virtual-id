@@ -19,11 +19,12 @@ class AuthWidget extends StatelessWidget {
       stream: _authService.onAuthStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
-          final user = snapshot.data;
+          final CustomUser user = snapshot.data;
           //return user != null ? HomeScreen() : SignInScreen();
           // Like that we make the user accessible to the descandants
           // and this is good because we do less firebase access even though
           // I can get it : Firebase.instance.currentUser
+          // Now all the below widgets have synchronous access to the user
           if (user != null) {
             return Provider<CustomUser>.value(
               value: user,

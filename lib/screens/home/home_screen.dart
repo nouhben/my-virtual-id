@@ -32,23 +32,32 @@ class HomeScreen extends StatelessWidget {
 
   Future<void> _chooseAvatar(BuildContext context) async {
     try {
-      final auth = Provider.of<AuthService>(context, listen: false);
       // 1. Get image from picker
-      // final _imagePickerService = ImagePickerService();
-      // final image =
-      //     await _imagePickerService.pickImage(source: ImageSource.gallery);
-      // // 2. Upload to storage
-      //User user = FirebaseAuth.instance.currentUser;
-      // final storage = FirebaseStorageService(uid: user.uid);
-      // final downloadUrl = await storage.upload(
-      //   file: image,
-      //   path: AvatarReference(downloadUrl: image.path).downloadUrl,
-      //   contentType: 'image/png',
-      // );
-      // // 3. Save url to Firestore
-      // final firestoreService = FirestoreService(uid: user.uid);
-      //firestoreService.setAvatarReference(avatarReference)
-      // 4. (optional) delete local file as no longer needed
+      final imagePickerService =
+          Provider.of<ImagePickerService>(context, listen: false);
+      final img =
+          await imagePickerService.pickImage(source: ImageSource.gallery);
+      if (img != null) {
+        // 2. Upload to storage
+        //User user = FirebaseAuth.instance.currentUser;
+        final user = Provider.of<CustomUser>(context, listen: false);
+        final storage =
+            Provider.of<FirebaseStorageService>(context, listen: false);
+        final downloadUrl =
+            await storage.uploadAvatarUid(file: img, uid: user.uid);
+        print(downloadUrl);
+        //3. Save url to Firestore
+        final databaseService = Provider.of<FirestoreService>(
+          context,
+          listen: false,
+        );
+        databaseService.setAvatarReference(
+          uid: user.uid,
+          avatarReference: AvatarReference(downloadUrl: downloadUrl),
+        );
+        // 4. (optional) delete local file as no longer needed
+        await img.delete();
+      }
     } catch (e) {
       print(e);
     }
@@ -90,12 +99,21 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildUserInfo({BuildContext context}) {
     // TODO: Download and show avatar from Firebase storage
-    return Avatar(
-      photoUrl: null,
-      radius: 50,
-      borderColor: Colors.black54,
-      borderWidth: 2.0,
-      onPressed: () => _chooseAvatar(context),
+    final databaseService = Provider.of<FirestoreService>(context);
+    final user = Provider.of<CustomUser>(context, listen: false);
+    // We do not want the homepage to rebuild there is already a stream builder responsible for that
+    return StreamBuilder<AvatarReference>(
+      stream: databaseService.avatarReferenceStream(uid: user.uid),
+      builder: (context, snapshot) {
+        final avatarReference = snapshot.data;
+        return Avatar(
+          photoUrl: avatarReference?.downloadUrl,
+          radius: 50,
+          borderColor: Colors.black54,
+          borderWidth: 2.0,
+          onPressed: () => _chooseAvatar(context),
+        );
+      },
     );
   }
 }
