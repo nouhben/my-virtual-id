@@ -40,11 +40,10 @@ class HomeScreen extends StatelessWidget {
       if (img != null) {
         // 2. Upload to storage
         //User user = FirebaseAuth.instance.currentUser;
-        final user = Provider.of<CustomUser>(context, listen: false);
+        // final user = Provider.of<CustomUser>(context, listen: false);
         final storage =
             Provider.of<FirebaseStorageService>(context, listen: false);
-        final downloadUrl =
-            await storage.uploadAvatarUid(file: img, uid: user.uid);
+        final downloadUrl = await storage.uploadAvatar(file: img);
         print(downloadUrl);
         //3. Save url to Firestore
         final databaseService = Provider.of<FirestoreService>(
@@ -52,7 +51,6 @@ class HomeScreen extends StatelessWidget {
           listen: false,
         );
         databaseService.setAvatarReference(
-          uid: user.uid,
           avatarReference: AvatarReference(downloadUrl: downloadUrl),
         );
         // 4. (optional) delete local file as no longer needed
@@ -99,20 +97,14 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildUserInfo({BuildContext context}) {
     // TODO: Download and show avatar from Firebase storage
+    // TODO: disable the button when the image is uploading and show progress bar
     final databaseService = Provider.of<FirestoreService>(context);
-    final user = Provider.of<CustomUser>(context, listen: false);
+    //final user = Provider.of<CustomUser>(context, listen: false);
     // We do not want the homepage to rebuild there is already a stream builder responsible for that
     return StreamBuilder<AvatarReference>(
-      stream: databaseService.avatarReferenceStream(uid: user.uid),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.active) {
-          print('still loading...');
-          return CircleAvatar(
-            radius: 30.0,
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          print('loaded loading...');
+        stream: databaseService.avatarReferenceStream(),
+        builder: (context, snapshot) {
+          print('loading the user info...');
           final avatarReference = snapshot.data;
           return Avatar(
             photoUrl: avatarReference?.downloadUrl,
@@ -121,8 +113,6 @@ class HomeScreen extends StatelessWidget {
             borderWidth: 2.0,
             onPressed: () => _chooseAvatar(context),
           );
-        }
-      },
-    );
+        });
   }
 }

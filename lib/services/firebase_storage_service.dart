@@ -5,9 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class FirebaseStorageService {
-  final String uid;
-
   FirebaseStorageService({@required this.uid}) : assert(uid != null);
+  final String uid;
 
   /// Generic file upload for any [path] and [contentType]
   Future<String> upload({
