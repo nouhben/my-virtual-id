@@ -105,14 +105,23 @@ class HomeScreen extends StatelessWidget {
     return StreamBuilder<AvatarReference>(
       stream: databaseService.avatarReferenceStream(uid: user.uid),
       builder: (context, snapshot) {
-        final avatarReference = snapshot.data;
-        return Avatar(
-          photoUrl: avatarReference?.downloadUrl,
-          radius: 50,
-          borderColor: Colors.black54,
-          borderWidth: 2.0,
-          onPressed: () => _chooseAvatar(context),
-        );
+        if (snapshot.connectionState != ConnectionState.active) {
+          print('still loading...');
+          return CircleAvatar(
+            radius: 30.0,
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          print('loaded loading...');
+          final avatarReference = snapshot.data;
+          return Avatar(
+            photoUrl: avatarReference?.downloadUrl,
+            radius: 50,
+            borderColor: Colors.black54,
+            borderWidth: 2.0,
+            onPressed: () => _chooseAvatar(context),
+          );
+        }
       },
     );
   }
