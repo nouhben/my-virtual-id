@@ -9,7 +9,9 @@ class FirestoreService {
   FirestoreService({@required this.uid}) : assert(uid != null);
 
   // Sets the avatar download url
-  Future<void> setAvatarReference(AvatarReference avatarReference) async {
+  Future<void> setAvatarReference({
+    @required AvatarReference avatarReference,
+  }) async {
     final path = FirestorePath.avatar(uid);
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.set(avatarReference.toMap());

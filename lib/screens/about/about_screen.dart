@@ -74,7 +74,10 @@ class CustomUserInfo extends StatelessWidget {
     return StreamBuilder<AvatarReference>(
       stream: _databaseService.avatarReferenceStream(),
       builder: (context, snapshot) => !snapshot.hasData
-          ? null
+          ? CircleAvatar(
+              child: CircularProgressIndicator(),
+              radius: 40,
+            )
           : Avatar(
               photoUrl: snapshot.data.downloadUrl ?? null,
               radius: 50.0,
