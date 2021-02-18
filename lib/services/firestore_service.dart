@@ -28,4 +28,18 @@ class FirestoreService {
       ),
     );
   }
+
+  List<AvatarReference> _avatarListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.toList().map(
+          (doc) => AvatarReference(
+            downloadUrl: doc.get('downloadUrl'),
+          ),
+        );
+  }
+
+  Stream<List<AvatarReference>> avatars() {
+    final reference = FirebaseFirestore.instance.collection('avatar');
+    final snapshots = reference.snapshots();
+    return snapshots.map(_avatarListFromSnapshot);
+  }
 }

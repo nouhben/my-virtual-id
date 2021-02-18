@@ -92,6 +92,15 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+      body: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildUserBodyInfo(context: context),
+          ],
+        ),
+      ),
     );
   }
 
@@ -114,5 +123,39 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => _chooseAvatar(context),
           );
         });
+  }
+
+  Widget _buildUserBodyInfo({BuildContext context}) {
+    final databaseService = Provider.of<FirestoreService>(context);
+    return StreamBuilder<List<AvatarReference>>(
+      stream: databaseService.avatars(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return SizedBox(
+            width: 80.0,
+            height: 8.0,
+            child: LinearProgressIndicator(),
+          );
+        }
+        final avatarReference = snapshot.data;
+        List<String> avatrs = [];
+        for (var avatarRef in avatarReference) {
+          avatrs.add(avatarRef.downloadUrl);
+        }
+        return ListView.builder(
+          itemCount: avatrs.length,
+          itemBuilder: (context, index) => ListTile(
+            leading: Image.network(
+              avatrs[index],
+              height: 100,
+            ),
+            title: Text(
+              avatrs[index],
+              softWrap: true,
+            ),
+          ),
+        );
+      },
+    );
   }
 }
