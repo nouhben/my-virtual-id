@@ -27,17 +27,17 @@ class AboutScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Advanced Provider Tutorials',
+              'Advanced Provider Architecture',
               style: Theme.of(context).textTheme.headline5,
             ),
             SizedBox(height: 32),
             Text(
-              'by Andrea Bizzotto',
+              'Following the course: by Andrea Bizzotto',
               style: Theme.of(context).textTheme.headline6,
             ),
             SizedBox(height: 32),
             Text(
-              'codingwithflutter.com',
+              'on: codingwithflutter.com',
               style: Theme.of(context).textTheme.headline6,
             ),
           ],
