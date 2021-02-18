@@ -8,7 +8,7 @@ ThemeData themeData(BuildContext context) {
   return ThemeData(
     appBarTheme: appBarTheme,
     primaryColor: kPrimaryColor,
-    accentColor: kAccentLightColor,
+    accentColor: kAccentDarkColor,
     scaffoldBackgroundColor: Colors.white,
     colorScheme: ColorScheme.light(
       secondary: kSecondaryLightColor,
@@ -51,4 +51,7 @@ ThemeData darkThemeData(BuildContext context) {
   );
 }
 
-AppBarTheme appBarTheme = AppBarTheme(color: Colors.transparent, elevation: 0);
+AppBarTheme appBarTheme = AppBarTheme(
+  color: kPrimaryColor,
+  elevation: 1.0,
+);
